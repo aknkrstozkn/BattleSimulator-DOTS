@@ -26,9 +26,14 @@ namespace ECS.Systems
             if (blueTeamCount == 0 || redTeamCount == 0)
             {
                 Team winningTeam = blueTeamCount > 0 ? Team.Blue : Team.Red;
-                /*EntityManager.AddComponent<StopMovingTag>(GetSingletonEntity<TeamComponent>());*/
-
-                // You can implement additional logic here to display a victory message or trigger other events.
+                if (winningTeam.Equals(Team.Blue))
+                {
+                    GameManager.RaiseGameWon();
+                }
+                else
+                {
+                    GameManager.RaiseGameLost();
+                }
             }
         }
     }
