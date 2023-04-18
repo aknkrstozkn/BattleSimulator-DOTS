@@ -1,23 +1,34 @@
 ﻿using System;
+using System.Collections.Generic;
+using ECS.ComponentsAndTags;
 using Unity.Entities;
 using UnityEngine;
+
+[Serializable]
+public struct TeamUnitPrefabData
+{
+	public Team team;
+	public GameObject unitPrefab;
+}
 
 public class PrefabsToEntityConverter : MonoBehaviour
 {
 	public static event Action PrefabsConverted;
 
-	[SerializeField] private GameObject blueTeamUnitPrefab;
-	[SerializeField] private GameObject redTeamUnitPrefab;
+	[SerializeField] private TeamUnitPrefabData[] teamsUnitPrefab;
 	[SerializeField] private GameObject unitHealthDisplayPrefab;
 
-	public static Entity BlueTeamUnit { get; private set; }
-	public static Entity RedTeamUnit { get; private set; }
+	public static Dictionary<Team, Entity> TeamsEntityDic { get; private set; }
 	public static Entity UnitHealthDisplay { get; private set; }
 	private void Awake()
 	{
+		TeamsEntityDic = new Dictionary<Team, Entity>();
+		
 		var settings = GameObjectConversionSettings.FromWorld(World.DefaultGameObjectInjectionWorld, null);
-		BlueTeamUnit = GameObjectConversionUtility.ConvertGameObjectHierarchy(blueTeamUnitPrefab, settings);
-		RedTeamUnit = GameObjectConversionUtility.ConvertGameObjectHierarchy(redTeamUnitPrefab, settings);
+		foreach (var teamUnitPrefab in teamsUnitPrefab)
+		{
+			TeamsEntityDic.Add(teamUnitPrefab.team, GameObjectConversionUtility.ConvertGameObjectHierarchy(teamUnitPrefab.unitPrefab, settings));
+		}
 		UnitHealthDisplay = GameObjectConversionUtility.ConvertGameObjectHierarchy(unitHealthDisplayPrefab, settings);
 
 		PrefabsConverted?.Invoke();
@@ -26,5 +37,6 @@ public class PrefabsToEntityConverter : MonoBehaviour
 	private void OnDestroy()
 	{
 		PrefabsConverted = null;
+		TeamsEntityDic = null;
 	}
 }

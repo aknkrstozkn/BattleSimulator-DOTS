@@ -5,7 +5,7 @@ using Unity.Mathematics;
 using UnityEngine;
 
 [Serializable]
-public struct Unit
+public struct UnitData
 {
 	[SerializeField] private int health;
 	[SerializeField] private float attackDamage;
@@ -24,13 +24,4 @@ public struct Unit
 	public float3 Position { get; set; }
 	public Entity DisplayEntity { get; set; }
 
-	public void TestInit(Team team)
-	{
-		health = 100;
-		attackDamage = 10;
-		attackRange = 2;
-		attackCooldown = 1;
-		movementSpeed = 4;
-		this.team = team;
-	}
 }

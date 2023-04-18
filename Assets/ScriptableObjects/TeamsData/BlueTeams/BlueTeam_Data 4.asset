@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: acaab122136741a9a56f0a4440f5986e, type: 3}
+  m_Name: BlueTeam_Data 4
+  m_EditorClassIdentifier: 
+  teamName: Blue Team - Alone Wolf
+  team: 0
+  unitsSlotsData:
+  - slotIndex: 4
+    unitData:
+      health: 100
+      attackDamage: 50
+      attackRange: 4
+      attackCooldown: 0.5
+      movementSpeed: 4
+      team: 0

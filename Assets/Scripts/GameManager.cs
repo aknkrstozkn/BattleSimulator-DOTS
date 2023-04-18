@@ -1,12 +1,14 @@
 using System;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
     public static event Action GameStarted;
     public static event Action GameWon;
     public static event Action GameLost;
+    public static event Action GameDraw;
+
+    public static event Action GameReloaded;
 
     public static void RaiseGameStarted()
     {
@@ -22,16 +24,23 @@ public class GameManager : MonoBehaviour
     {
         GameLost?.Invoke();
     }
-
-    public static void RestartGame()
-    {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
-    }
     
+    public static void RaiseGameDraw()
+    {
+        GameDraw?.Invoke();
+    }
+
+    public static void RaiseGameReloaded()
+    {
+        GameReloaded?.Invoke();
+    }
+
     private void OnDestroy()
     {
         GameStarted = null;
         GameWon = null;
         GameLost = null;
+        GameReloaded = null;
+        GameDraw = null;
     }
 }

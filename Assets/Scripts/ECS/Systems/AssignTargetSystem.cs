@@ -7,6 +7,24 @@ namespace ECS.Systems
 	[UpdateAfter(typeof(InitializeUnitsSystem))]
 	public partial class AssignTargetSystem : SystemBase
 	{
+		protected override void OnCreate()
+		{
+			base.OnCreate();
+			Enabled = false;
+			GameManager.GameStarted += OnGameStarted;
+			GameManager.GameReloaded += OnGameReloaded;
+		}
+		
+		private void OnGameReloaded()
+		{
+			Enabled = false;
+		}
+		
+		private void OnGameStarted()
+		{
+			Enabled = true;
+		}
+
 		protected override void OnUpdate()
 		{
 			var random = new Random((uint)UnityEngine.Random.Range(1, int.MaxValue));

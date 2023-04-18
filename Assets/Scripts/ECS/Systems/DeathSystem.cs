@@ -1,5 +1,6 @@
 ﻿using ECS.ComponentsAndTags;
 using Unity.Entities;
+using UnityEngine;
 namespace ECS.Systems
 {
 	[UpdateAfter(typeof(ECS.Systems.AttackSystem))]
@@ -10,7 +11,20 @@ namespace ECS.Systems
 		protected override void OnCreate()
 		{
 			base.OnCreate();
+			Enabled = false;
 			_endSimulationEcbSystem = World.GetOrCreateSystem<EndSimulationEntityCommandBufferSystem>();
+			GameManager.GameStarted += OnGameStarted;
+			GameManager.GameReloaded += OnGameReloaded;
+		}
+		
+		private void OnGameReloaded()
+		{
+			Enabled = false;
+		}
+		
+		private void OnGameStarted()
+		{
+			Enabled = true;
 		}
 
 		protected override void OnUpdate()

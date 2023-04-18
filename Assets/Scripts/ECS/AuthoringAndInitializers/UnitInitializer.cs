@@ -5,7 +5,7 @@ namespace ECS.AuthoringAndInitializers
 {
 	public static class UnitInitializer
 	{
-		public static void Init(ref Entity entity, ref EntityCommandBuffer ecb, ref Unit data)
+		public static void Init(ref Entity entity, ref EntityCommandBuffer ecb, ref UnitData data)
 		{
 			ecb.AddComponent<LocalToWorld>(entity);
 			

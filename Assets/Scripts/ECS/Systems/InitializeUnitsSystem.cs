@@ -2,6 +2,7 @@
 using ECS.ComponentsAndTags;
 using Unity.Entities;
 using Unity.Mathematics;
+using UnityEngine;
 namespace ECS.Systems
 {
 	public partial class InitializeUnitsSystem : SystemBase
@@ -13,53 +14,84 @@ namespace ECS.Systems
 			base.OnCreate();
 			_ecbSystem = World.GetOrCreateSystem<EndInitializationEntityCommandBufferSystem>();
 			PrefabsToEntityConverter.PrefabsConverted += OnPrefabsConverted;
+			TeamButton.TeamButtonClicked += OnTeamButtonClicked;
+			GameManager.GameReloaded += OnGameReloaded;
 		}
-		
+
 		protected override void OnUpdate()
 		{
 			
 		}
+
+		private void OnGameReloaded()
+		{
+			DestroyUnits();
+			OnPrefabsConverted();
+		}
 		
-		private void OnPrefabsConverted()
+		private void DestroyUnits()
+		{
+			var ecb = _ecbSystem.CreateCommandBuffer();
+			Entities
+				.ForEach((Entity entity, int entityInQueryIndex, in TeamComponent team, in DisplayComponent display) =>
+				{
+					ecb.DestroyEntity(entity);
+					ecb.DestroyEntity(display.value);
+				}).WithoutBurst().Run();
+		}
+		
+		private void DestroyTeam(Team targetTeam)
+		{
+			var ecb = _ecbSystem.CreateCommandBuffer();
+			Entities
+				.ForEach((Entity entity, int entityInQueryIndex, in TeamComponent team, in DisplayComponent display) =>
+				{
+					if (team.value.Equals(targetTeam))
+					{
+						ecb.DestroyEntity(entity);
+						ecb.DestroyEntity(display.value);
+					}
+				}).WithoutBurst().Run();
+		}
+		
+		private void OnTeamButtonClicked(TeamData teamData)
+		{
+			DestroyTeam(teamData.Team);
+			InstantiateTeam(teamData);
+		}
+
+		private void InstantiateTeam(TeamData teamData)
 		{
 			var ecb = _ecbSystem.CreateCommandBuffer();
 
-			// Blue team units
-			for (int i = 0; i < 10; i++)
+			var instantiationEntity = PrefabsToEntityConverter.TeamsEntityDic[teamData.Team];
+			var slotIndexUnitDic = teamData.GetSlotIndexUnitDic();
+			for (int i = 0; i < DataManager.TeamsSpawnPoints[teamData.Team].Length; i++)
 			{
-				var unitData = new Unit();
-				unitData.TestInit(Team.Blue);
-				//TODO get pos from config file
-				unitData.Position = new float3(-5, 1, -5 + i);
-				//------------*
-				
-				Entity unit = ecb.Instantiate(PrefabsToEntityConverter.BlueTeamUnit);
+				// Check if slot acquired
+				if (!slotIndexUnitDic.ContainsKey(i))
+				{
+					continue;
+				}
+				var unitData = slotIndexUnitDic[i];
+				unitData.Position = DataManager.TeamsSpawnPoints[teamData.Team][i];
+				Entity unit = ecb.Instantiate(instantiationEntity);
 				Entity unitHealthDisplay = ecb.Instantiate(PrefabsToEntityConverter.UnitHealthDisplay);
 				unitData.DisplayEntity = unitHealthDisplay;
 				
 				UnitInitializer.Init(ref unit, ref ecb, ref unitData);
-				HealthDisplayInitializer.Init(ref unitHealthDisplay, ref unit, ref ecb);
+				HealthDisplayInitializer.Init(ref unitHealthDisplay, ref unit, ref ecb);	
 			}
-
-			// Red team units
-			for (int i = 0; i < 10; i++)
+		}
+		
+		private void OnPrefabsConverted()
+		{
+			foreach (var tEntity in PrefabsToEntityConverter.TeamsEntityDic)
 			{
-				var unitData = new Unit();
-				unitData.TestInit(Team.Red);
-				//TODO get pos from config file
-				unitData.Position = new float3(5, 1, -5 + i);
-				//------------*
-				
-				Entity unit = ecb.Instantiate(PrefabsToEntityConverter.RedTeamUnit);
-				Entity unitHealthDisplay = ecb.Instantiate(PrefabsToEntityConverter.UnitHealthDisplay);
-				unitData.DisplayEntity = unitHealthDisplay;
-				
-				UnitInitializer.Init(ref unit, ref ecb, ref unitData);
-				HealthDisplayInitializer.Init(ref unitHealthDisplay, ref unit, ref ecb);
+				var team = tEntity.Key;
+				var teamData = DataManager.TeamsData[team][0];
+				InstantiateTeam(teamData);
 			}
-			
-			// Destroy InitializeUnits entity
-			_ecbSystem.AddJobHandleForProducer(Dependency);
 		}
 	}
 }

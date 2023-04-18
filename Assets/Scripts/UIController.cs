@@ -8,6 +8,7 @@ public class UIController : MonoBehaviour
     [SerializeField] private GameObject endGameUI;
     [SerializeField] private GameObject winText;
     [SerializeField] private GameObject lostText;
+    [SerializeField] private GameObject drawText;
 
     private void Awake()
     {
@@ -27,6 +28,22 @@ public class UIController : MonoBehaviour
         GameManager.GameStarted += OnGameStarted;
         GameManager.GameWon += OnGameWon;
         GameManager.GameLost += OnGameLost;
+        GameManager.GameDraw += OnGameDraw;
+        GameManager.GameReloaded += OnGameReloaded;
+    }
+    
+    private void OnGameDraw()
+    {
+        endGameUI.SetActive(true);
+        inGameUI.SetActive(false);
+        lostText.SetActive(false);
+        winText.SetActive(false);
+        drawText.SetActive(true);
+    }
+    
+    private void OnGameReloaded()
+    {
+        Init();
     }
 
     private void OnGameStarted()
@@ -41,6 +58,7 @@ public class UIController : MonoBehaviour
         inGameUI.SetActive(false);
         lostText.SetActive(false);
         winText.SetActive(true);
+        drawText.SetActive(false);
     }
 
     private void OnGameLost()
@@ -49,6 +67,7 @@ public class UIController : MonoBehaviour
         inGameUI.SetActive(false);
         lostText.SetActive(true);
         winText.SetActive(false);
+        drawText.SetActive(false);
     }
 
     public void OnClickStartGame()
@@ -58,6 +77,6 @@ public class UIController : MonoBehaviour
 
     public void OnClickRestartGame()
     {
-        GameManager.RestartGame();
+        GameManager.RaiseGameReloaded();
     }
 }
