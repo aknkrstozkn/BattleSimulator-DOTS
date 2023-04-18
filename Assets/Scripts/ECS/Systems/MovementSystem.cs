@@ -11,13 +11,13 @@ namespace ECS.Systems
 	[UpdateAfter(typeof(ECS.Systems.AssignTargetSystem))]
 	public partial class MovementSystem : SystemBase
 	{
-		EndSimulationEntityCommandBufferSystem m_EndSimulationEcbSystem;
+		EndSimulationEntityCommandBufferSystem _endSimulationEcbSystem;
 
 		protected override void OnCreate()
 		{
 			base.OnCreate();
 			Enabled = false;
-			m_EndSimulationEcbSystem = World.GetOrCreateSystem<EndSimulationEntityCommandBufferSystem>();
+			_endSimulationEcbSystem = World.GetOrCreateSystem<EndSimulationEntityCommandBufferSystem>();
 			GameManager.GameStarted += OnGameStarted;
 			GameManager.GameReloaded += OnGameReloaded;
 		}
@@ -33,7 +33,7 @@ namespace ECS.Systems
 		
 		protected override void OnUpdate()
 		{
-			var ecb = m_EndSimulationEcbSystem.CreateCommandBuffer().AsParallelWriter();
+			var ecb = _endSimulationEcbSystem.CreateCommandBuffer().AsParallelWriter();
 			float deltaTime = Time.DeltaTime;
 
 			var entities = EntityManager.GetAllEntities(Allocator.TempJob);
@@ -63,6 +63,7 @@ namespace ECS.Systems
 					});
 					
 				}).ScheduleParallel();
+			_endSimulationEcbSystem.AddJobHandleForProducer(Dependency);
 		}
 	}
 }
