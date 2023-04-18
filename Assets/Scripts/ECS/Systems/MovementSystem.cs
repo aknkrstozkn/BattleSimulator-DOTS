@@ -5,6 +5,9 @@ using Unity.Mathematics;
 using Unity.Transforms;
 namespace ECS.Systems
 {
+	/// <summary>
+	/// After AssignTargetSystems starts working this systems move units to their targets. 
+	/// </summary>
 	[UpdateAfter(typeof(ECS.Systems.AssignTargetSystem))]
 	public partial class MovementSystem : SystemBase
 	{
@@ -34,30 +37,25 @@ namespace ECS.Systems
 			float deltaTime = Time.DeltaTime;
 
 			var entities = EntityManager.GetAllEntities(Allocator.TempJob);
-			
-			NativeArray<Translation> translations = new NativeArray<Translation>(entities.Length, Allocator.TempJob);
-			Entities
-				.ForEach((Entity entity, in Translation translation) =>
-				{
-					translations[entities.IndexOf(entity)] = translation;
-				}).WithoutBurst().Run();
 
 			Entities
-				.WithReadOnly(translations)
-				.ForEach((Entity entity, int entityInQueryIndex, ref Translation position, in MovementSpeedComponent movementSpeed, in TargetComponent target, in AttackRangeComponent attackRange) =>
+				.ForEach((Entity entity, int entityInQueryIndex, in Translation position, in MovementSpeedComponent movementSpeed, in TargetComponent target, in AttackRangeComponent attackRange) =>
 				{
-					if (!entities.Contains(target.value))
+					//Check if entity exist, different way to check if target entity is valid
+					if (!entities.Contains(target.value) || !HasComponent<Translation>(target.value))
 					{
 						return;
 					}
 					
-					float3 targetPosition = translations[entities.IndexOf(target.value)].Value;
+					//Check target units distance, if close stop
+					float3 targetPosition = GetComponent<Translation>(target.value).Value;
 					targetPosition.y = position.Value.y;
 					if (math.distance(targetPosition, position.Value) <= attackRange.value)
 					{
 						return;
 					}
 					
+					// If target unit is not in range, move to target
 					float3 direction = math.normalize(targetPosition - position.Value);
 					ecb.SetComponent(entityInQueryIndex, entity, new Translation()
 					{

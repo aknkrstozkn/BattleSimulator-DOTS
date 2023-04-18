@@ -4,6 +4,9 @@ using ECS.ComponentsAndTags;
 using Unity.Entities;
 using UnityEngine;
 
+/// <summary>
+/// Using struct for better visualization on inspector
+/// </summary>
 [Serializable]
 public struct TeamUnitPrefabData
 {
@@ -11,6 +14,9 @@ public struct TeamUnitPrefabData
 	public GameObject unitPrefab;
 }
 
+/// <summary>
+/// Simply creates entity prefabs from game object prefabs.
+/// </summary>
 public class PrefabsToEntityConverter : MonoBehaviour
 {
 	public static event Action PrefabsConverted;

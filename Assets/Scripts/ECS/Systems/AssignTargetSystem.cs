@@ -4,6 +4,9 @@ using Unity.Entities;
 using Unity.Mathematics;
 namespace ECS.Systems
 {
+	/// <summary>
+	/// This system matches random rival units
+	/// </summary>
 	[UpdateAfter(typeof(InitializeUnitsSystem))]
 	public partial class AssignTargetSystem : SystemBase
 	{
@@ -20,6 +23,9 @@ namespace ECS.Systems
 			Enabled = false;
 		}
 		
+		/// <summary>
+		/// Before the game start we don't this system to match any unit
+		/// </summary>
 		private void OnGameStarted()
 		{
 			Enabled = true;
@@ -33,6 +39,7 @@ namespace ECS.Systems
 			NativeArray<Entity> entities = query.ToEntityArray(Allocator.TempJob);
 			
 			// Create a NativeList to store entities with a specific component
+			// This doesn't need to be parallel
 			var redUnits = new NativeList<Entity>(Allocator.TempJob);
 			var blueUnits = new NativeList<Entity>(Allocator.TempJob);
 			Entities
@@ -51,6 +58,7 @@ namespace ECS.Systems
 					}
 				}).Run();
 
+			// Using async programming to handle random unit match
 			Entities
 				.WithAll<TargetComponent>()
 				.WithAll<TeamComponent>()

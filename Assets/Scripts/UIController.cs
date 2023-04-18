@@ -1,5 +1,7 @@
 using UnityEngine;
-
+/// <summary>
+/// A Basic UI controller
+/// </summary>
 public class UIController : MonoBehaviour
 {
     [SerializeField] private GameObject preGameUI;

@@ -1,5 +1,8 @@
 ﻿using UnityEngine;
  
+/// <summary>
+/// To visualize FPS at the corner of screen for debugging purposes
+/// </summary>
 public class FPSCounter : MonoBehaviour
 {
 	private float _deltaTime = 0.0f;

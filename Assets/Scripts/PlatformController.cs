@@ -1,5 +1,8 @@
 using UnityEngine;
 
+/// <summary>
+/// To control starting platform of teams. Just for polish.
+/// </summary>
 public class PlatformController : MonoBehaviour
 {
 	[SerializeField] private GameObject[] teamsPlatforms;

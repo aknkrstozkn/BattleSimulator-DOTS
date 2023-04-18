@@ -4,6 +4,9 @@ using Unity.Entities;
 using Unity.Mathematics;
 using UnityEngine;
 
+/// <summary>
+/// This struct holds whole Unit data for generation purposes
+/// </summary>
 [Serializable]
 public struct UnitData
 {

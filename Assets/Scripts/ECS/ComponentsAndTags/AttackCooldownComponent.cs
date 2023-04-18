@@ -2,6 +2,9 @@
 using Unity.Entities;
 namespace ECS.ComponentsAndTags
 {
+	/// <summary>
+	/// Controls delay of the attacks 
+	/// </summary>
 	[Serializable]
 	public struct AttackCooldownComponent : IComponentData
 	{

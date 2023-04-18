@@ -3,6 +3,9 @@ using Unity.Entities;
 using Unity.Transforms;
 namespace ECS.AuthoringAndInitializers
 {
+	/// <summary>
+	/// Inits Unit entities component data
+	/// </summary>
 	public static class UnitInitializer
 	{
 		public static void Init(ref Entity entity, ref EntityCommandBuffer ecb, ref UnitData data)

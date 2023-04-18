@@ -5,6 +5,9 @@ using Unity.Transforms;
 using UnityEngine;
 namespace ECS.AuthoringAndInitializers
 {
+	/// <summary>
+	/// Inits TextMesh entities component data
+	/// </summary>
 	public static class HealthDisplayInitializer
 	{
 		public static void Init(ref Entity entity, ref Entity targetEntity, ref EntityCommandBuffer ecb)

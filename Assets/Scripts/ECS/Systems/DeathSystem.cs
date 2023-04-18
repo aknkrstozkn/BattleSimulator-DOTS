@@ -1,8 +1,10 @@
 ﻿using ECS.ComponentsAndTags;
 using Unity.Entities;
-using UnityEngine;
 namespace ECS.Systems
 {
+	/// <summary>
+	/// This systems checks if an entities hp below or equal zero to destroy it.
+	/// </summary>
 	[UpdateAfter(typeof(ECS.Systems.AttackSystem))]
 	public partial class DeathSystem : SystemBase
 	{
@@ -38,6 +40,7 @@ namespace ECS.Systems
 					if (health.currentHealth <= 0)
 					{
 						ecb.DestroyEntity(entityInQueryIndex, entity);
+						// Destroying Health Text also
 						ecb.DestroyEntity(display.value.Index, display.value);
 					}
 				}).ScheduleParallel();

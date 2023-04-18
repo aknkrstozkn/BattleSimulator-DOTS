@@ -1,9 +1,11 @@
 ﻿using ECS.ComponentsAndTags;
-using Unity.Collections;
 using Unity.Entities;
 using UnityEngine;
 namespace ECS.Systems
 {
+	/// <summary>
+	/// Updated health texts of units
+	/// </summary>
 	[UpdateAfter(typeof(InitializeUnitsSystem))]
 	public partial class UpdateHealthDisplaySystem : SystemBase
 	{
@@ -17,16 +19,14 @@ namespace ECS.Systems
 		
 		protected override void OnUpdate()
 		{
-			var ecb = _endSimulationEcbSystem.CreateCommandBuffer().AsParallelWriter();
-			NativeArray<Entity> entities = EntityManager.GetAllEntities(Allocator.TempJob); 
+			// This is not performant,
+			// We are not event using BursCompiler
+			// This is simply a basic for loop but...
+			// If you wanna use TextMesh, we can't have parallel programming
+			// at least for this part.
 			Entities
 				.ForEach((Entity entity, int entityInQueryIndex, TextMesh textMesh, in DisplayParentComponent parent) =>
 				{
-					if (!entities.Contains(parent.value))
-					{
-						ecb.DestroyEntity(entityInQueryIndex, entity);
-						return;
-					}
 					textMesh.text = EntityManager.GetComponentData<HealthComponent>(parent.value).currentHealth.ToString();
 				})
 				.WithoutBurst()

@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using ECS.ComponentsAndTags;
 using UnityEngine;
 
+/// <summary>
+/// A struct to give better inputs on inspector
+/// </summary>
 [Serializable]
 public struct TeamSpawnTransformsData
 {
@@ -10,6 +13,9 @@ public struct TeamSpawnTransformsData
 	public Transform[] spawnTransforms;
 }
 
+/// <summary>
+/// This Manager basically holds team and unit data for entity generation
+/// </summary>
 public class DataManager : MonoBehaviour
 {
 	[SerializeField] private TeamSpawnTransformsData[] teamsSpawnData;
@@ -18,6 +24,9 @@ public class DataManager : MonoBehaviour
 	public static Dictionary<Team, Vector3[]> TeamsSpawnPoints { get; private set; }
 	public static Dictionary<Team, List<TeamData>> TeamsData { get; private set; }
 
+	/// <summary>
+	/// Clear static values on destroy
+	/// </summary>
 	private void OnDestroy()
 	{
 		TeamsSpawnPoints = null;
@@ -35,6 +44,9 @@ public class DataManager : MonoBehaviour
 	    InitTeams();
     }
 
+    /// <summary>
+    /// Storing values on dictionary first to have a better usage
+    /// </summary>
     private void InitTeams()
     {
 	    TeamsData = new Dictionary<Team, List<TeamData>>();
@@ -49,12 +61,14 @@ public class DataManager : MonoBehaviour
 	    }
     }
     
+    /// <summary>
+    /// Storing values on dictionary first to have a better usage
+    /// </summary>
     private void InitSpawnPoints()
     {
 	    TeamsSpawnPoints = new Dictionary<Team, Vector3[]>();
-	    
 
-        foreach (var spawnData in teamsSpawnData)
+	    foreach (var spawnData in teamsSpawnData)
         {
 	        var spawnPoints = new Vector3[9];
 	        if (spawnData.spawnTransforms.Length != 9)

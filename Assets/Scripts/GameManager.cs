@@ -1,6 +1,9 @@
 using System;
 using UnityEngine;
 
+/// <summary>
+/// Simply holds game events
+/// </summary>
 public class GameManager : MonoBehaviour
 {
     public static event Action GameStarted;

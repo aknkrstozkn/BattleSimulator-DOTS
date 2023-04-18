@@ -5,6 +5,10 @@ using Unity.Mathematics;
 using UnityEngine;
 namespace ECS.Systems
 {
+	/// <summary>
+	/// This is the core system. Other systems waits for this system.
+	/// This systems generates Entities and Destroys Them.
+	/// </summary>
 	public partial class InitializeUnitsSystem : SystemBase
 	{
 		private EntityCommandBufferSystem _ecbSystem;
@@ -29,6 +33,9 @@ namespace ECS.Systems
 			OnPrefabsConverted();
 		}
 		
+		/// <summary>
+		/// Destroys All Unit entities with their health text entities
+		/// </summary>
 		private void DestroyUnits()
 		{
 			var ecb = _ecbSystem.CreateCommandBuffer();
@@ -40,6 +47,9 @@ namespace ECS.Systems
 				}).WithoutBurst().Run();
 		}
 		
+		/// <summary>
+		/// Destroy specified team, I used this to change teams when I clicked team buttons
+		/// </summary>
 		private void DestroyTeam(Team targetTeam)
 		{
 			var ecb = _ecbSystem.CreateCommandBuffer();
@@ -84,6 +94,10 @@ namespace ECS.Systems
 			}
 		}
 		
+		/// <summary>
+		/// When games starts, after prefab entities instantiated
+		/// Creates default(first) teams.
+		/// </summary>
 		private void OnPrefabsConverted()
 		{
 			foreach (var tEntity in PrefabsToEntityConverter.TeamsEntityDic)

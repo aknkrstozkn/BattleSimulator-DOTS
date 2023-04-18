@@ -3,6 +3,13 @@ using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;
 using UnityEngine;
+
+/// <summary>
+/// Basically checks for end game scenarios. 
+/// It need to be MonoBehaviour not system because of the draw scenarios.
+/// When Draw scenario happens, system updates automatically shuts down
+/// And we can pre-know if there is no entity left
+/// </summary>
 public class EndGameChecker : MonoBehaviour
 {
 	private bool _checkForDraw = false;
