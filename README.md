@@ -1,5 +1,5 @@
-# BattleSimulator-UnityECS
-Basic Battle Simulator Game for Unity ECS practice.
+# BattleSimulator with Unity DOTS
+Basic Battle Simulator Game for Unity DOTS practice.
 
 Simulation screen shots.
 
